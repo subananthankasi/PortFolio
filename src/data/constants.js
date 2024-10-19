@@ -12,7 +12,8 @@ export const Bio = {
  "I am a qualified and professional web developer with one year of experience in front-end web development, focusing on React.js. I possess strong creative and analytical skills, with a proven ability to design and implement responsive user interfaces. A team player with an eye for detail, always staying updated with emerging trends and technologies in frontend development",
   github: "https://github.com/subananthankasi",
   resume:
-  "https://drive.google.com/file/d/1RQ9EjYZgYnc5IKdcRmH_08X2q77oCKas/view?usp=sharing",  
+  // "https://drive.google.com/file/d/1RQ9EjYZgYnc5IKdcRmH_08X2q77oCKas/view?usp=sharing",  
+  "https://drive.google.com/file/d/1RQ9EjYZgYnc5IKdcRmH_08X2q77oCKas/view?usp=sharing",
   // "https://drive.google.com/file/d/1ffZrcMcn8UatXGIaautbbqpV7ADNaETA/view?usp=sharing",
   linkedin: "https://www.linkedin.com/in/subananthan-kasirajan/",
   // twitter: "https://twitter.com/RishavChanda",

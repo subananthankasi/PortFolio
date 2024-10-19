@@ -1,8 +1,10 @@
-import React,{useState} from 'react'
+import React, { useState, useRef } from 'react'
 import styled from 'styled-components'
-import { useRef } from 'react';
+// import { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import { Snackbar } from '@mui/material';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const Container = styled.div`
 display: flex;
@@ -127,42 +129,123 @@ const Contact = () => {
   //hooks
   const [open, setOpen] = useState(false);
   const form = useRef();
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    emailjs
-      .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf') // Use Public Key
-      .then(
-        () => {
-          console.log('SUCCESS!');
-          setOpen(true); 
-          form.current.reset(); 
-        },
-        (error) => {
-          console.log('FAILED...', error.text);
-        },
-      );
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   emailjs
+  //     .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf') // Use Public Key
+  //     .then(
+  //       () => {
+  //         console.log('SUCCESS!');
+  //         setOpen(true); 
+  //         form.current.reset(); 
+  //       },
+  //       (error) => {
+  //         console.log('FAILED...', error.text);
+  //       },
+  //     );
+  // };
+  const formik = useFormik({
+    initialValues: {
+      from_email: '',
+      from_name: '',
+      subject: '',
+      message: ''
+    },
+    validationSchema: Yup.object({
+      from_email: Yup.string()
+        .email('Invalid email address..!')
+        .required('required..!'),
+      from_name: Yup.string()
+      .required('required..!'),
+      subject: Yup.string()
+      .required('required..!'),
+      message: Yup.string()
+      .required('required..!'),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      emailjs
+        .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf')
+        .then(
+          () => {
+            console.log('SUCCESS!');
+            setOpen(true);
+            resetForm(); 
+          },
+          (error) => {
+            console.log('FAILED...', error.text);
+          }
+        );
+    }
+  });
 
 
-   
   return (
     <Container id='contact'>
       <Wrapper>
         <Title >Contact</Title>
         <Desc>Feel free to reach out to me for any questions or opportunities!</Desc>
-        <ContactForm ref={form} onSubmit={handleSubmit}>
+        <ContactForm ref={form} onSubmit={formik.handleSubmit}>
+        {/* <form ref={form} onSubmit={formik.handleSubmit}> */}
           <ContactTitle>Email Me 🚀</ContactTitle>
-          <ContactInput placeholder="Your Email" name="from_email" />
+          {/* <ContactInput placeholder="Your Email" name="from_email" />
           <ContactInput placeholder="Your Name" name="from_name" />
           <ContactInput placeholder="Subject" name="subject" />
-          <ContactInputMessage placeholder="Message" rows="4" name="message" />
-          <ContactButton type="submit" value="Send" />
+          <ContactInputMessage placeholder="Message" rows="4" name="message" /> */}
+          <ContactInput
+            placeholder="Your Email"
+            name="from_email"
+            value={formik.values.from_email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.from_email && formik.errors.from_email ? (
+            <div style={{ color: 'red' }}>{formik.errors.from_email}</div>
+          ) : null}
+
+          <ContactInput
+            placeholder="Your Name"
+            name="from_name"
+            value={formik.values.from_name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.from_name && formik.errors.from_name ? (
+            <div style={{ color: 'red' }}>{formik.errors.from_name}</div>
+          ) : null}
+
+          <ContactInput
+            placeholder="Subject"
+            name="subject"
+            value={formik.values.subject}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.subject && formik.errors.subject ? (
+            <div style={{ color: 'red' }}>{formik.errors.subject}</div>
+          ) : null}
+
+          <ContactInputMessage
+            placeholder="Message"
+            rows="4"
+            name="message"
+            value={formik.values.message}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.message && formik.errors.message ? (
+            <div style={{ color: 'red' }}>{formik.errors.message}</div>
+          ) : null}
+          <ContactButton type="submit" value="Send" disabled={!formik.isValid || formik.isSubmitting} style={{cursor:'pointer'}}/>
+          {/* <ContactButton type="submit" value="Send" /> */}
+        {/* </form> */}
         </ContactForm>
+
         <Snackbar
           open={open}
           autoHideDuration={6000}
-          onClose={()=>setOpen(false)}
+          onClose={() => setOpen(false)}
           message="Email sent successfully!"
           severity="success"
         />
