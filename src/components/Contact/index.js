@@ -164,6 +164,8 @@ const Contact = () => {
       message: Yup.string()
       .required('required..!'),
     }),
+    validateOnChange: true,   // Enable validation on field change
+    validateOnBlur: true, 
     onSubmit: (values, { resetForm }) => {
       emailjs
         .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf')
@@ -196,7 +198,7 @@ const Contact = () => {
           <ContactInput
             placeholder="Your Email"
             name="from_email"
-            value={formik.values.from_email}
+            value={formik.values.from_email}  
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
           />

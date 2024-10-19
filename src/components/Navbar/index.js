@@ -17,6 +17,7 @@ const Navbar = () => {
             <DiCssdeck size="3rem" /> <Span>Portfolio</Span>
           </a>
         </NavLogo>
+   
         <MobileIcon>
           <FaBars onClick={() => {
             setIsOpen(!isOpen)
