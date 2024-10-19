@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import emailjs from '@emailjs/browser';
 import { Snackbar } from '@mui/material';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
+// import * as Yup from 'yup';
+import * as yup from "yup";
 
 const Container = styled.div`
 display: flex;
@@ -130,22 +131,7 @@ const Contact = () => {
   const [open, setOpen] = useState(false);
   const form = useRef();
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
 
-  //   emailjs
-  //     .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf') // Use Public Key
-  //     .then(
-  //       () => {
-  //         console.log('SUCCESS!');
-  //         setOpen(true); 
-  //         form.current.reset(); 
-  //       },
-  //       (error) => {
-  //         console.log('FAILED...', error.text);
-  //       },
-  //     );
-  // };
   const formik = useFormik({
     initialValues: {
       from_email: '',
@@ -153,36 +139,42 @@ const Contact = () => {
       subject: '',
       message: ''
     },
-    validationSchema: Yup.object({
-      from_email: Yup.string()
+    validationSchema: yup.object().shape({
+      from_email: yup.string()
         .email('Invalid email address..!')
         .required('required..!'),
-      from_name: Yup.string()
-      .required('required..!'),
-      subject: Yup.string()
-      .required('required..!'),
-      message: Yup.string()
-      .required('required..!'),
+      from_name: yup.string().required('required..!'),
+      subject: yup.string().required('required..!'),
+      message: yup.string().required('required..!'),
     }),
-    validateOnChange: true,   // Enable validation on field change
-    validateOnBlur: true, 
-    onSubmit: (values, { resetForm }) => {
-      emailjs
-        .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf')
-        .then(
-          () => {
-            console.log('SUCCESS!');
-            setOpen(true);
-            resetForm(); 
-          },
-          (error) => {
-            console.log('FAILED...', error.text);
-          }
-        );
-    }
+    validateOnChange: true,  
+    validateOnBlur: true,    
+    onSubmit: async (values, { resetForm }) => {
+      const errors = await formik.validateForm(); 
+      if (Object.keys(errors).length === 0) {
+        
+        emailjs
+          .sendForm('service_2xuf074', 'template_ldhh5uc', form.current, 'Y-AM2ot_qCynvbSdf')
+          .then(
+            () => {
+              console.log('SUCCESS!');
+              setOpen(true);
+              resetForm(); 
+            },
+            (error) => {
+              console.log('FAILED...', error.text);
+            }
+          );
+      } else {
+        formik.setTouched({
+          from_email: true,
+          from_name: true,
+          subject: true,
+          message: true
+        });
+      }
+    },
   });
-
-
   return (
     <Container id='contact'>
       <Wrapper>
@@ -239,8 +231,14 @@ const Contact = () => {
           {formik.touched.message && formik.errors.message ? (
             <div style={{ color: 'red' }}>{formik.errors.message}</div>
           ) : null}
-          <ContactButton type="submit" value="Send" disabled={!formik.isValid || formik.isSubmitting} style={{cursor:'pointer'}}/>
-          {/* <ContactButton type="submit" value="Send" /> */}
+          {/* <ContactButton type="submit" value="Send" disabled={!formik.isValid || formik.isSubmitting} style={{cursor:'pointer'}}/> */}
+          {/* {formik.isValid && ( */}
+          <ContactButton
+            type="submit"
+            value="Send"
+            style={{ cursor: 'pointer' }}
+          />
+         {/* )} */}
         {/* </form> */}
         </ContactForm>
 
