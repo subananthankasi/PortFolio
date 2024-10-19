@@ -3,6 +3,7 @@ import { Modal } from '@mui/material';
 import React from 'react'
 import styled from 'styled-components'
 
+
 const Container = styled.div`
 width: 100%;
 height: 100%;
@@ -198,6 +199,8 @@ const index = ({ openModal, setOpenModal }) => {
                         onClick={() => setOpenModal({ state: false, project: null })}
                     />
                     <Image src={project?.image} />
+                
+
                     <Title>{project?.title}</Title>
                     <Date>{project.date}</Date>
                     <Tags>
@@ -226,7 +229,7 @@ const index = ({ openModal, setOpenModal }) => {
                         </>
                     )}
                     <ButtonGroup>
-                        <Button dull href={project?.github} target='new'>View Code</Button>
+                        <Button dull href={project?.github} target='new'>Private Code</Button>
                         <Button href={project?.webapp} target='new'>View Live App</Button>
                     </ButtonGroup>
                 </Wrapper>
